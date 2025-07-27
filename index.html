@@ -3,169 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ Cosmic Stars Shop</title>
+    <title>Калькулятор TON</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --main-color: #7b2cbf;
-            --secondary-color: #e0aaff;
-            --bg-color: #10002b;
-        }
-        
         body {
             margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: white;
-            font-family: 'Arial', sans-serif;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(123, 44, 191, 0.15) 0%, transparent 25%),
-                radial-gradient(circle at 90% 80%, rgba(224, 170, 255, 0.1) 0%, transparent 25%);
-        }
-        
-        .container {
-            max-width: 100%;
             padding: 20px;
-            box-sizing: border-box;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-            padding: 20px 0;
-            background: rgba(16, 0, 43, 0.7);
-            border-radius: 15px;
-            border: 1px solid var(--main-color);
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
         
         h1 {
-            color: var(--secondary-color);
-            text-shadow: 0 0 10px rgba(224, 170, 255, 0.5);
-            font-size: 2.5rem;
-            margin: 0;
-        }
-        
-        .balance {
-            background: rgba(123, 44, 191, 0.2);
-            padding: 10px 20px;
-            border-radius: 20px;
-            display: inline-block;
-            margin: 15px 0;
-            border: 1px solid var(--secondary-color);
-            font-weight: bold;
-        }
-        
-        .stars-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .star-item {
-            background: rgba(32, 0, 64, 0.6);
-            border-radius: 15px;
-            padding: 15px;
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+            margin-bottom: 30px;
             text-align: center;
-            border: 1px solid rgba(123, 44, 191, 0.3);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
         }
         
-        .star-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(123, 44, 191, 0.3);
-            border-color: var(--secondary-color);
+        .calculator {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+            backdrop-filter: blur(5px);
         }
         
-        .star-emoji {
-            font-size: 3rem;
-            margin: 10px 0;
-            text-shadow: 0 0 15px var(--secondary-color);
-            animation: pulse 2s infinite alternate;
+        .input-group {
+            margin-bottom: 20px;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
         }
         
-        .star-name {
-            font-weight: bold;
-            margin: 10px 0;
-            color: var(--secondary-color);
-        }
-        
-        .star-price {
-            color: white;
-            font-weight: bold;
-            background: rgba(123, 44, 191, 0.5);
-            padding: 5px 10px;
-            border-radius: 10px;
-            display: inline-block;
-        }
-        
-        .buy-btn {
-            background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        input {
             width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #111;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
         }
         
-        .buy-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(224, 170, 255, 0.5);
+        input:focus {
+            outline: none;
+            border-color: #00ff88;
         }
         
-        /* Анимация частиц */
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 10px;
+            border-left: 3px solid #00ff88;
+        }
+        
+        .result-value {
+            font-size: 24px;
+            color: #00ff88;
+            margin: 10px 0;
+        }
+        
         .particle {
             position: absolute;
-            background-color: rgba(224, 170, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.6);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 0;
+            z-index: -1;
             animation: float linear infinite;
         }
         
         @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-        }
-        
-        /* Fragment API стили */
-        .fragment-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            color: #00c6ff;
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="fragment-badge">Powered by Fragment</div>
-            <h1>Cosmic Stars</h1>
-            <div class="balance">
-                Ваш баланс: <span id="balance">0</span> ⭐
-            </div>
-        </header>
+    <h1>G-I SHOPSTARS</h1>
+    
+    <div class="calculator">
+        <div class="input-group">
+            <label for="ton-amount">Сумма в TON:</label>
+            <input type="number" id="ton-amount" placeholder="Введите количество TON" step="0.01">
+        </div>
         
-        <div class="stars-grid" id="starsGrid">
-            <!-- Товары будут загружены через JS -->
+        <div class="input-group">
+            <label for="ton-price">Курс TON в рублях:</label>
+            <input type="number" id="ton-price" placeholder="Текущий курс (например, 250)" value="250" step="0.01">
+        </div>
+        
+        <div class="input-group">
+            <label for="star-price">Цена 1 звезды в рублях:</label>
+            <input type="number" id="star-price" placeholder="Цена звезды" value="100" step="0.01">
+        </div>
+        
+        <div class="result">
+            <div>Вы получите:</div>
+            <div class="result-value" id="stars-result">0 ⭐</div>
+            <div id="rubles-result">0 рублей</div>
         </div>
     </div>
     
@@ -174,22 +124,9 @@
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
         
-        // Данные товаров (можно заменить на запрос к вашему API)
-        const starProducts = [
-            { id: 1, name: "Малая звезда", emoji: "⭐", price: 10, fragment_id: "star1" },
-            { id: 2, name: "Звезда-гигант", emoji: "🌟", price: 30, fragment_id: "star2" },
-            { id: 3, name: "Млечный путь", emoji: "🌌", price: 100, fragment_id: "star3" },
-            { id: 4, name: "Падающая звезда", emoji: "🌠", price: 50, fragment_id: "star4" },
-            { id: 5, name: "Созвездие", emoji: "🔯", price: 150, fragment_id: "star5" },
-            { id: 6, name: "Звезда судьбы", emoji: "☄️", price: 200, fragment_id: "star6" }
-        ];
-        
-        // Пользовательские данные
-        let userBalance = 0;
-        
         // Создаем частицы
         function createParticles() {
-            const particleCount = 20;
+            const particleCount = 30;
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -197,7 +134,7 @@
                 
                 const size = Math.random() * 3 + 1;
                 const posX = Math.random() * 100;
-                const duration = Math.random() * 10 + 5;
+                const duration = Math.random() * 15 + 10;
                 const delay = Math.random() * 5;
                 const opacity = Math.random() * 0.5 + 0.3;
                 
@@ -213,62 +150,28 @@
             }
         }
         
-        // Отображаем товары
-        function renderProducts() {
-            const grid = document.getElementById('starsGrid');
-            grid.innerHTML = '';
+        // Расчет результатов
+        function calculate() {
+            const tonAmount = parseFloat(document.getElementById('ton-amount').value) || 0;
+            const tonPrice = parseFloat(document.getElementById('ton-price').value) || 0;
+            const starPrice = parseFloat(document.getElementById('star-price').value) || 0;
             
-            starProducts.forEach(product => {
-                const productElement = document.createElement('div');
-                productElement.className = 'star-item';
-                productElement.innerHTML = `
-                    <div class="star-emoji">${product.emoji}</div>
-                    <div class="star-name">${product.name}</div>
-                    <div class="star-price">${product.price} ⭐</div>
-                    <button class="buy-btn" data-id="${product.id}" data-fragment="${product.fragment_id}">Купить через Fragment</button>
-                `;
-                grid.appendChild(productElement);
-            });
+            const rubles = tonAmount * tonPrice;
+            const stars = Math.floor(rubles / starPrice);
             
-            // Обновляем баланс
-            document.getElementById('balance').textContent = userBalance;
+            document.getElementById('stars-result').textContent = `${stars} ⭐`;
+            document.getElementById('rubles-result').textContent = `${rubles.toFixed(2)} рублей`;
         }
         
-        // Обработка покупки
-        function handleBuy(event) {
-            if (event.target.classList.contains('buy-btn')) {
-                const productId = event.target.getAttribute('data-id');
-                const fragmentId = event.target.getAttribute('data-fragment');
-                const product = starProducts.find(p => p.id == productId);
-                
-                // Открываем Fragment для оплаты
-                Telegram.WebApp.openInvoice({
-                    slug: fragmentId
-                }, (status) => {
-                    if (status === 'paid') {
-                        userBalance += product.price;
-                        renderProducts();
-                        alert(`Вы купили ${product.name}!`);
-                    }
-                });
-            }
-        }
+        // Слушатели изменений
+        document.getElementById('ton-amount').addEventListener('input', calculate);
+        document.getElementById('ton-price').addEventListener('input', calculate);
+        document.getElementById('star-price').addEventListener('input', calculate);
         
-        // Запускаем приложение
+        // Инициализация
         document.addEventListener('DOMContentLoaded', () => {
             createParticles();
-            renderProducts();
-            document.getElementById('starsGrid').addEventListener('click', handleBuy);
-            
-            // Запрашиваем баланс у Fragment API
-            fetch('https://api.fragment.com/balance', {
-                headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                userBalance = data.balance;
-                renderProducts();
-            });
+            calculate();
             
             // Обновляем частицы каждые 30 секунд
             setInterval(createParticles, 30000);
